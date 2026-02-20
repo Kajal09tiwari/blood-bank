@@ -1,0 +1,35 @@
+.dashboard-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 90vh;
+    background: #f5f5f5;
+  }
+  
+  .dashboard-box {
+    background: white;
+    padding: 2rem 3rem;
+    border-radius: 12px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    text-align: left;
+    width: 400px;
+  }
+  
+  .dashboard-title {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    font-size: 1.8rem;
+    color: #2e7d32;
+  }
+  
+  .donor-details p {
+    margin: 10px 0;
+    font-size: 1.1rem;
+  }
+  
+  .dashboard-error {
+    color: red;
+    text-align: center;
+    font-weight: bold;
+  }
+  
