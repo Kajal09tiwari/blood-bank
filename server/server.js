@@ -19,7 +19,12 @@ const hospitalLogin = require("./routes/hospitalLogin"); // ✅ Import the hospi
 
 // Middleware
 app.use(express.json());
-app.use(cors());
+// const cors = require("cors");
+
+app.use(cors({
+  origin: "https://blood-bank-82dr.vercel.app",
+  credentials: true
+}));
 
 // Routes
 app.use("/api/auth", authRoutes);
