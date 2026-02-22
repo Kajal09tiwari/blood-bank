@@ -8,7 +8,7 @@ const DashboardHospital = () => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/hospital/all-profiles")
+    fetch("https://blood-bank-1-7t8o.onrender.com")
       .then((res) => res.json())
       .then((data) => {
         setDonors(data.donors || []);
@@ -19,7 +19,7 @@ const DashboardHospital = () => {
   const approveDonor = async (donorId) => {
     setLoading(true);
     try {
-      const response = await fetch(`http://localhost:5000/api/hospital/approve-donor/${donorId}`, {
+      const response = await fetch(`https://blood-bank-1-7t8o.onrender.com`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

@@ -16,7 +16,7 @@ const HospitalLogin = ({ onLogin }) => {
     e.preventDefault();
     console.log(credentials);
     try {
-      const res = await axios.post("http://localhost:5000/api/hospital/login", credentials);
+      const res = await axios.post("https://blood-bank-1-7t8o.onrender.com", credentials);
       if (res.data.success) {
         
          // You can perform other login actions here if needed

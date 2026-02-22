@@ -31,7 +31,7 @@ export default function RegisterRecipient() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch("http://localhost:5000/api/recipient", {
+      const res = await fetch("https://blood-bank-1-7t8o.onrender.com", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),

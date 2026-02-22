@@ -13,7 +13,7 @@ const DashboardDonor = () => {
       // fallback API fetch if localStorage empty
       const fetchProfile = async () => {
         const token = localStorage.getItem("token");
-        const res = await fetch("http://localhost:5000/api/donor-profile/me", {
+        const res = await fetch("https://blood-bank-1-7t8o.onrender.com", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
