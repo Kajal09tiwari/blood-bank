@@ -22,7 +22,9 @@ app.use(express.json());
 // const cors = require("cors");
 
 app.use(cors({
-  origin: "https://blood-bank-6qky.vercel.app/",
+  origin: [
+    "https://blood-bank-omkh-git-main-kajal09tiwaris-projects.vercel.app"
+  ],
   credentials: true
 }));
 
