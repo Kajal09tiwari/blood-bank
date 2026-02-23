@@ -8,54 +8,62 @@ const DashboardHospital = () => {
   const [recipients, setRecipients] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
+ useEffect(() => {
     const fetchData = async () => {
       try {
         const donorsData = await donorAPIs.getAllDonors();
         const recipientsData = await recipientAPIs.getAllRecipients();
-        
+
         setDonors(Array.isArray(donorsData) ? donorsData : []);
         setRecipients(Array.isArray(recipientsData) ? recipientsData : []);
       } catch (err) {
         console.error("Error fetching data:", err);
         setDonors([]);
         setRecipients([]);
-      }donorAPIs.updateDonor({
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const approveDonor = async (donorId) => {
+    setLoading(true);
+    try {
+      const response = await donorAPIs.updateDonor({
         id: donorId,
         isAvailable: true,
+        approvedByHospital: true,
       });
 
-      if (response.message || response.donor) {
-        alert("Donor approved/updated!");
-
-        setDonors((prevDonors) =>
-          prevDonors.map((donor) =>
-            donor._id === donorId ? { ...donor, approvedByHospital: true } : donor
-          )
+      // handle different API shapes
+      if (response && (response.ok || response.message || response.donor)) {
+        setDonors((prev) =>
+          prev.map((d) => (d._id === donorId ? { ...d, approvedByHospital: true } : d))
         );
+        alert("Donor approved/updated!");
       } else {
-        alert("Error updating donor");
+        // try to parse JSON response if present
+        try {
+          const data = response && typeof response.json === "function" ? await response.json() : response;
+          if (data && (data.message || data.donor)) {
+            setDonors((prev) =>
+              prev.map((d) => (d._id === donorId ? { ...d, approvedByHospital: true } : d))
+            );
+            alert("Donor approved!");
+          } else {
+            alert("Error updating donor");
+          }
+        } catch {
+          alert("Error updating donor");
+        }
       }
-
-      const data = await response.json();
-      alert("Donor approved!");
-
-      setDonors((prevDonors) =>
-        prevDonors.map((donor) =>
-          donor._id === donorId ? { ...donor, approvedByHospital: true } : donor
-        )
-      );
     } catch (err) {
       console.error("Error approving donor:", err);
-      alert("Server error: " + err.message);
+      alert("Server error: " + (err.message || err));
     } finally {
       setLoading(false);
     }
-  };
-
-  const getCompatibleRecipients = (donorBloodType) => {
-    return recipients.filter((recipient) => recipient.bloodType === donorBloodType);
-  };
+  }; 
 
   const getCompatibleDonors = (recipientBloodType) => {
     const compatibility = {
