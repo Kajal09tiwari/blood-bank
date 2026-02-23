@@ -21,12 +21,12 @@ const hospitalLogin = require("./routes/hospitalLogin"); // ✅ Import the hospi
 app.use(express.json());
 // const cors = require("cors");
 
+// ...existing code...
 app.use(cors({
-  origin: [
-    "https://blood-bank-omkh-git-main-kajal09tiwaris-projects.vercel.app"
-  ],
+  origin: true, // reflect request origin, allows all origins
   credentials: true
 }));
+// ...existing code...
 
 // Routes
 app.use("/api/auth", authRoutes);
