@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import "./DonorForm.css";
+import { donorAPIs } from "../services/api";
 
 export default function DonorForm() {
   const [formData, setFormData] = useState({
@@ -56,28 +57,22 @@ export default function DonorForm() {
     }
 
     try {
-      const userId = localStorage.getItem("userId");
       const finalFormData = {
         ...formData,
         medications: formData.medications.trim() === "" ? "None" : formData.medications.trim(),
-        userId,
+        bloodGroup: formData.bloodType,
+        contactNumber: formData.bloodPressure,
+        city: formData.location,
+        isAvailable: true,
       };
 
-      const res = await fetch("https://blood-bank-1-7t8o.onrender.com", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-        body: JSON.stringify(finalFormData),
-      });
-
-      const data = await res.json();
-      if (res.ok) {
+      const data = await donorAPIs.addDonor(finalFormData);
+      
+      if (data.message) {
         alert("Donor profile submitted successfully!");
         navigate("/dashboard/donor");
       } else {
-        alert(data.error || "Error submitting form");
+        alert(data.error || data.message || "Error submitting form");
       }
     } catch (err) {
       console.error("Submission error:", err);

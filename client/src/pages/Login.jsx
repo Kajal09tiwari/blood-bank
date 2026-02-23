@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import { authAPIs } from "../services/api";
 
 export default function Login() {
   const [loginData, setLoginData] = useState({
@@ -16,16 +17,10 @@ export default function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch("https://blood-bank-1-7t8o.onrender.com", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(loginData),
-      });
-
-      const data = await res.json();
+      const data = await authAPIs.login(loginData);
       console.log("Login response:", data);
 
-      if (res.ok) {
+      if (data.token && data.user) {
         localStorage.setItem("token", data.token);
         localStorage.setItem("user", JSON.stringify(data.user));
 

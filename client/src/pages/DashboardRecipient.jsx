@@ -74,6 +74,7 @@
 
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { compatibilityAPIs } from "../services/api";
 
 const DashboardRecipient = () => {
   const [recipientId, setRecipientId] = useState("");
@@ -95,14 +96,8 @@ const DashboardRecipient = () => {
     setLoading(true);
 
     try {
-      const response = await fetch("https://blood-bank-1-7t8o.onrender.com", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ recipientId }),
-      });
-
-      const data = await response.json();
-      if (response.ok) {
+      const data = await compatibilityAPIs.getMatches(recipientId);
+      if (data && !data.error) {
         setMatches(data);
       } else {
         alert(data.error || "Failed to fetch matches");

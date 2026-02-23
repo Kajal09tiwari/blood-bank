@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";  // useNavigate instead of useHistory
+import { useNavigate } from "react-router-dom";
+import { authAPIs } from "../services/api";
 
 const HospitalRegister = () => {
   const [name, setName] = useState("");
@@ -12,22 +13,16 @@ const HospitalRegister = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const data = { name, email, password, location };
+    const data = { name, email, password, role: "hospital" };
 
     try {
-      const response = await fetch("https://blood-bank-1-7t8o.onrender.com", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      });
-
-      const result = await response.json();
-      if (response.ok) {
-        // Registration successful, redirect to login page
-        navigate("/hospital/login");  // Use navigate instead of history.push
+      const result = await authAPIs.register(data);
+      if (result.token && result.user) {
+        localStorage.setItem("token", result.token);
+        localStorage.setItem("user", JSON.stringify(result.user));
+        navigate("/hospital/login");
       } else {
-        // Handle registration error
-        setError(result.message);
+        setError(result.message || "Registration failed");
       }
     } catch (err) {
       setError("Error registering hospital. Please try again.");

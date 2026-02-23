@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import { recipientAPIs } from "../services/api";
 
 export default function RegisterRecipient() {
   const [formData, setFormData] = useState({
@@ -31,16 +32,10 @@ export default function RegisterRecipient() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch("https://blood-bank-1-7t8o.onrender.com", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
-
-      const data = await res.json();
+      const data = await recipientAPIs.addRecipient(formData);
       console.log("Recipient Register Response:", data);
 
-      if (res.ok) {
+      if (data._id) {
         localStorage.setItem("recipientId", data._id);
         alert("Recipient profile created successfully!");
         navigate("/DashboardRecipient");

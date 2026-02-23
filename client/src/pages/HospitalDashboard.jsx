@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "./Hospital.css";
+import { donorAPIs, recipientAPIs } from "../services/api";
 
 const DashboardHospital = () => {
   const [donors, setDonors] = useState([]);
@@ -8,27 +9,32 @@ const DashboardHospital = () => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    fetch("https://blood-bank-1-7t8o.onrender.com")
-      .then((res) => res.json())
-      .then((data) => {
-        setDonors(data.donors || []);
-        setRecipients(data.recipients || []);
-      });
-  }, []);
-
-  const approveDonor = async (donorId) => {
-    setLoading(true);
-    try {
-      const response = await fetch(`https://blood-bank-1-7t8o.onrender.com`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
+    const fetchData = async () => {
+      try {
+        const donorsData = await donorAPIs.getAllDonors();
+        const recipientsData = await recipientAPIs.getAllRecipients();
+        
+        setDonors(Array.isArray(donorsData) ? donorsData : []);
+        setRecipients(Array.isArray(recipientsData) ? recipientsData : []);
+      } catch (err) {
+        console.error("Error fetching data:", err);
+        setDonors([]);
+        setRecipients([]);
+      }donorAPIs.updateDonor({
+        id: donorId,
+        isAvailable: true,
       });
 
-      if (!response.ok) {
-        const text = await response.text();
-        throw new Error(`Error: ${text}`);
+      if (response.message || response.donor) {
+        alert("Donor approved/updated!");
+
+        setDonors((prevDonors) =>
+          prevDonors.map((donor) =>
+            donor._id === donorId ? { ...donor, approvedByHospital: true } : donor
+          )
+        );
+      } else {
+        alert("Error updating donor");
       }
 
       const data = await response.json();

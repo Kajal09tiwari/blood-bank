@@ -56,6 +56,7 @@
 
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import { authAPIs } from "../services/api";
 
 export default function RegisterRecipient() {
   const [formData, setFormData] = useState({
@@ -100,20 +101,14 @@ export default function RegisterRecipient() {
     
     setIsSubmitting(true);
     try {
-      const res = await fetch("https://blood-bank-1-7t8o.onrender.com", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
-
-      const data = await res.json();
+      const data = await authAPIs.register(formData);
       console.log("Register response:", data);
 
-      if (res.ok) {
-        alert(data.message || "Registration successful. Check your email!");
+      if (data.token && data.user) {
+        alert(data.message || "Registration successful. Please log in!");
         navigate("/login");
       } else {
-        alert(data.error || "Something went wrong.");
+        alert(data.message || data.error || "Something went wrong.");
       }
     } catch (err) {
       console.error("Register error:", err);

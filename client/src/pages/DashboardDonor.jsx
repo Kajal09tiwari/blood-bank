@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { donorAPIs } from "../services/api";
 
 const DashboardDonor = () => {
   const [profile, setProfile] = useState(null);
@@ -12,14 +13,14 @@ const DashboardDonor = () => {
     } else {
       // fallback API fetch if localStorage empty
       const fetchProfile = async () => {
-        const token = localStorage.getItem("token");
-        const res = await fetch("https://blood-bank-1-7t8o.onrender.com", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        const data = await res.json();
-        setProfile(data);
+        try {
+          const data = await donorAPIs.getMyInfo();
+          if (data) {
+            setProfile(data);
+          }
+        } catch (err) {
+          console.error("Error fetching profile:", err);
+        }
       };
 
       fetchProfile();

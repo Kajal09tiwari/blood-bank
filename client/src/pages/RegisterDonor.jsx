@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import { authAPIs } from "../services/api";
 
 export default function RegisterDonor() {
   const [formData, setFormData] = useState({
@@ -24,19 +25,13 @@ export default function RegisterDonor() {
     e.preventDefault();
 
     try {
-      const res = await fetch("https://blood-bank-1-7t8o.onrender.com/api/auth/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
+      const data = await authAPIs.register(formData);
 
-      const data = await res.json();
-
-      if (res.ok) {
+      if (data.token && data.user) {
         alert("Registration successful! Please log in.");
         navigate("/login");
       } else {
-        alert(data.error || "Registration failed");
+        alert(data.message || data.error || "Registration failed");
       }
     } catch (err) {
       console.error("Registration error:", err);
