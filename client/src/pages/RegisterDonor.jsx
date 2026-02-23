@@ -24,7 +24,7 @@ export default function RegisterDonor() {
     e.preventDefault();
 
     try {
-      const res = await fetch("https://blood-bank-1-7t8o.onrender.com/api/users/register", {
+      const res = await fetch("https://blood-bank-1-7t8o.onrender.com/api/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
